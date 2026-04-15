@@ -1,0 +1,15 @@
+{
+  "name": "ph-math",
+  "version": "0.1.0",
+  "description": "Math functions and objects.",
+  "type": "module",
+  "main": "src/index.js",
+  "files": [
+    "src"
+  ],
+  "keywords": [
+    "math"
+  ],
+  "author": "Pavlo Halkovsky",
+  "license": "MIT"
+}
