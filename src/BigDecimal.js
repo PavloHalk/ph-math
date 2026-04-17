@@ -82,8 +82,53 @@ class BigDecimal {
     
     subtract(n) {
         n = this.#validateAndNormalize(n);
+
+        const sizeInt = Math.max(this.#integer.length, n.#integer.length);
+        const sizeDec = Math.max(this.#decimal.length, n.#decimal.length);
+
+        const ai = this.#integer.padStart(sizeInt, '0');
+        const bi = n.#integer.padStart(sizeInt, '0');
+        const ad = this.#decimal.padEnd(sizeDec, '0');
+        const bd = n.#decimal.padEnd(sizeDec, '0');
+        let ri = sub(ai, bi);
+        let rd = sub(ad, bd);
+        
+        if (rd.startsWith('r')) {
+            ri = sub(ri, '1'.padStart(ri.length, '0'));
+            rd = rd.substring(1);
+        }
+        
+        if (ri.startsWith('r')) {
+            throw new RangeError("BigDecimal cannot be below zero. For now. Will be fixed soon.");
+        }
+
+        this.#integer = ri;
+        this.#decimal = rd;
+        this.#precise();
         
         return this;
+        
+        function sub(a, b) {
+            let result = '';
+            let iterSub = 0;
+            let iterModifier = 0;
+            for (let i = a.length -1; i >= 0; i--) {
+                iterSub = Number(a[i]) - Number(b[i]) - iterModifier;
+
+                if (iterSub < 0) {
+                    iterSub = 10 - Math.abs(iterSub);
+                    iterModifier = 1;
+                } else {
+                    iterModifier = 0;
+                }
+
+                result += iterSub.toString();
+            }
+
+            if (iterModifier) result += 'r';
+
+            return result.split('').toReversed().join('');
+        }
     }
     
     multiply(n) {
@@ -130,8 +175,7 @@ class BigDecimal {
     [Symbol.toStringTag] = 'BigDecimal';
 }
 
-const a = new BigDecimal('901', '705', 10);
+const a = new BigDecimal('90188815', '705', 10);
 const b = new BigDecimal('9', '9999', 10);
-a.add(b).add(88).add(17.005).add('8785').add('0.00095');
-//a.add(999.42);
+a.subtract(b).subtract(88).subtract(17.005).subtract('8785').subtract('0.00095');
 console.log(a.toString());
