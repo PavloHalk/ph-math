@@ -4,8 +4,10 @@ class BigDecimal {
     #decimalPrecision = 1000;
     
     constructor(integer, decimal, decimalPrecision = 1000) {
-        if (typeof decimalPrecision !== 'number') throw new TypeError("Precision must be an integer number.");
-        if (Math.floor(decimalPrecision) !== decimalPrecision) throw new RangeError("Precision must be an integer number.");
+        const errMsg = "Precision must be an integer number greater than zero.";
+        
+        if (typeof decimalPrecision !== 'number') throw new TypeError(errMsg);
+        if (Math.floor(decimalPrecision) !== decimalPrecision || decimalPrecision < 1) throw new RangeError(errMsg);
         
         this.#integer = validateAndNormalize(integer);
         this.#decimal = validateAndNormalize(decimal);
