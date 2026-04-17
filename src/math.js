@@ -1,8 +1,9 @@
-// Date		2025-12-22
-
 export function squareEquation(a, b, c) {
-	if (((typeof a || typeof b || typeof c) != 'number') || (a == 0)) {
-		throw new Error("Arguments should be a numbers and should not equal zero.");
+	if ((typeof a || typeof b || typeof c) !== 'number') {
+		throw new TypeError("Arguments should be a numbers.");
+	}
+	if (!a) {
+		throw new RangeError("First argument should not equal zero.");
 	}
 	
 	let result = {};
@@ -11,12 +12,12 @@ export function squareEquation(a, b, c) {
 		result.x1 = ((-b) + Math.sqrt(result.discriminant)) / (2 * a);
 		result.x2 = ((-b) - Math.sqrt(result.discriminant)) / (2 * a);
 		return result;
-	} else if (result.discriminant == 0) {
+	} else if (result.discriminant === 0) {
 		result.x1 = (-b) / (2 * a);
 		result.x2 = undefined;
 		return result;
 	} else {
-		result.x1 = result.x2 = 'No root';
+		result.x1 = result.x2 = 'Complex';
 		return result;
 	}
 }
@@ -24,12 +25,12 @@ export function squareEquation(a, b, c) {
 /** Equation type: a1*x + b1*y = c1; a2*x + b2*y = c2
  */
 export function systemEquation(a1, b1, c1, a2, b2, c2) {
-	if ((typeof a1 || typeof b1 || typeof c1 || typeof a2 || typeof b2 || typeof c2) != 'number') {
-		throw new Error("Expected six numeric arguments.");
+	if ((typeof a1 || typeof b1 || typeof c1 || typeof a2 || typeof b2 || typeof c2) !== 'number') {
+		throw new TypeError("Expected six numeric arguments.");
 	}
 	
-	if ((a2 * b1 - a1 * b2 == 0) || (b1 == 0)) {
-		throw new Error("Unexpected Error");
+	if ((a2 * b1 - a1 * b2 === 0) || (b1 === 0)) {
+		throw new RangeError("Predicting dividing by zero.");
 	}
 	
 	let result = {};
@@ -40,35 +41,37 @@ export function systemEquation(a1, b1, c1, a2, b2, c2) {
 }
 
 export function convertAngleUnit(value, from, to) {
-	if (typeof value != 'number' || typeof from != 'string' || typeof to != 'string') {
-		throw new Error("Invalid arguments.");
+	if (typeof value !== 'number' || typeof from !== 'string' || typeof to !== 'string') {
+		throw new TypeError("Invalid argument type.");
 	}
-	if (from != 'r' && from != 'g' && from != 'd') {
-		throw new Error("Second argument is invalid. Should be r for radians, g for grads and d for degrees.");
+	if (from !== 'r' && from !== 'g' && from !== 'd') {
+		throw new RangeError("Second argument is invalid. Should be r for radians, g for grads and d for degrees.");
 	}
-	if (to != 'r' && to != 'g' && to != 'd') {
-		throw new Error("Third argument is invalid. Should be r for radians, g for grads and d for degrees.");
+	if (to !== 'r' && to !== 'g' && to !== 'd') {
+		throw new RangeError("Third argument is invalid. Should be r for radians, g for grads and d for degrees.");
 	}
 	
-	if (from == to) {
+	if (from === to) {
 		return value;
 	}
 	
-	if (from == 'r') {
-		let degree = value * (180 / Math.PI);
-	} else if (from == 'g') {
-		let degree = value * (10 / 9);
-	} else if (from == 'd') {
-		let degree = value;
+	let degree = 0;
+	
+	if (from === 'r') {
+		degree = value * (180 / Math.PI);
+	} else if (from === 'g') {
+		degree = value * (10 / 9);
+	} else if (from === 'd') {
+		degree = value;
 	} else {
 		throw new Error("Unexpected Error");
 	}
 	
-	if (to == 'r') {
+	if (to === 'r') {
 		return degree * (Math.PI / 180);
-	} else if (to == 'g') {
+	} else if (to === 'g') {
 		return degree * 0.9;
-	} else if (to == 'd') {
+	} else if (to === 'd') {
 		return degree;
 	} else {
 		throw new Error("Unexpected Error");
@@ -79,7 +82,7 @@ export function convertAngleUnit(value, from, to) {
  */
 export function func(f, beginX, endX) {
 	if ((typeof beginX != 'number') || (typeof endX != 'number')) {
-		throw new Error("Invalid function range.");
+		throw new TypeError("Invalid type for function range arguments.");
 	}
 	
 	let result = [];
@@ -94,7 +97,7 @@ export function func(f, beginX, endX) {
 	return result;
 }
 
-/** Calcs circle data: square and perimeter from its radius (r).
+/** Calculates circle data: square and perimeter from its radius (r).
  */
 export function circleData(r) {
 	let result = {};
@@ -103,11 +106,11 @@ export function circleData(r) {
 	return result;
 }
 
-/** Pifagor theoreme. Provide two sides in parameters and provide one of them as null to find this side.
+/** Pifagor theorem. Provide two sides in parameters and provide one of them as null to find this side.
  */
 export function pifagor(a, b, c) {
 	if ((a || b || c) <= 0) {
-		throw new Error("Only one argument should be null. Other should be numbers above zero.");
+		throw new RangeError("Only one argument should be null. Other should be numbers above zero.");
 	}
 
 	if ((a == null) && (b != null) && (c != null)) {
@@ -123,14 +126,14 @@ export function pifagor(a, b, c) {
 	throw new Error("Unexpected error.");
 }
 
-export function arraySumm(arr) {
+export function arraySum(arr) {
 	let s = 0;
 	for (let i = 0; i < arr.length; i++) {
-		if (typeof arr[i] == 'number') {
+		if (typeof arr[i] === 'number') {
 			s = s + arr[i];
 		}
 		else {
-			throw new Error("Invalid argument. Should be number[]");
+			throw new TypeError("Invalid argument. Should be number[]");
 		}
 	}
 	return s;
@@ -139,11 +142,11 @@ export function arraySumm(arr) {
 export function arrayProduct(arr) {
 	let p = 1;
 	for (let i = 0; i < arr.length; i++) {
-		if (typeof arr[i] == 'number') {
+		if (typeof arr[i] === 'number') {
 			p = p * arr[i];
 		}
 		else {
-			throw new Error("Invalid argument. Should be number[]");
+			throw new TypeError("Invalid argument. Should be number[]");
 		}
 	}
 	return p;
@@ -153,7 +156,7 @@ export function decToBin(x) {
 	x = Math.abs(x);
 	let bin = [];
 	let znak;
-	if (x == 0) {
+	if (x === 0) {
 		return x.toString();
 	}
 	while (x >= 1) {
@@ -164,9 +167,16 @@ export function decToBin(x) {
 	return bin.join('');
 }
 
-export function primes(numbers, startNumber) {
-	startNumber = startNumber || 2;
-	if (numbers < 1 || typeof numbers != 'number' || typeof startNumber != 'number') {
+/**
+ * Returns an array of prime numbers.
+ * I believe a better algorithm exists. This one is only what I could do :)
+ * 
+ * @param numbers
+ * @param startNumber
+ * @return {number[]}
+ */
+export function primes(numbers, startNumber = 2) {
+	if (numbers < 1 || typeof numbers !== 'number' || typeof startNumber !== 'number') {
 		return [];
 	}
 	if (startNumber < 2) {
@@ -180,7 +190,7 @@ export function primes(numbers, startNumber) {
 
 	while (simples.length < numbers) {
 		for (let i=2; i<searchingNumber; i++) {
-			if (searchingNumber % i == 0) {
+			if (searchingNumber % i === 0) {
 				isItSimple = false;
 				break;
 			}
@@ -204,7 +214,7 @@ export function primeFactors(x) {
 	let i = x;
 
 	while (i >= d) {
-		if (i == d) {
+		if (i === d) {
 			primeFactors.push(i);
 			break;
 		}
@@ -328,7 +338,7 @@ export function gcd(...numbers) {
 /** Greatest Common Divisor
  * Provide as many numeric arguments as needed.
  *
- * This function is deprecated. Use gcd instead.
+ * @deprecated This function is deprecated and will be removed. Use gcd instead.
  */
 export function gcdOld() {
 	if (!arguments.length) {
@@ -384,11 +394,11 @@ export function gcdOld() {
 	}
 }
 
-/** As excel function СУММПРОИЗВ.
+/** As Excel function SUMPRODUCT.
  */
 export function sumProduct(a, b) {
-	if (Object.prototype.toString.call(a) != '[object Array]' ||
-		Object.prototype.toString.call(b) != '[object Array]') {
+	if (Object.prototype.toString.call(a) !== '[object Array]' ||
+		Object.prototype.toString.call(b) !== '[object Array]') {
 		throw new TypeError('All arguments should be an arrays.');
 	}
 	
@@ -396,33 +406,33 @@ export function sumProduct(a, b) {
 	
 	let product = 0;
 	for (let i=0; i<a.length; i++) {
-		if (b[i] == undefined) {
+		if (b[i] === undefined) {
 			b[i] = 0;
 		}
 		
-		if (typeof a[i] != 'number' || typeof b[i] != 'number') {
-			throw new Error('Type of all elements in given arrays should be a numbers. You have argumnet1[' + i + '] as ' + typeof a[i] + ' and argument2[' + i + '] as ' + typeof b[i] + '.');
+		if (typeof a[i] !== 'number' || typeof b[i] !== 'number') {
+			throw new TypeError('Type of all elements in given arrays should be a numbers. You have argumnet1[' + i + '] as ' + typeof a[i] + ' and argument2[' + i + '] as ' + typeof b[i] + '.');
 		}
 		
 		product = a[i] * b[i];
 		products.push(product);
 	}
 	
-	return arraySumm(products);
+	return arraySum(products);
 }
 
-/** Calcs summs of each elements in arrays and store result to the new array.
+/** Calculates a sum of each element in arrays and store the result to the new array.
  */
 export function sumArrayElements(a, b) {
-	if (Object.prototype.toString.call(a) != '[object Array]' ||
-		Object.prototype.toString.call(b) != '[object Array]') {
-		throw new Error('All arguments should be an arrays.');
+	if (Object.prototype.toString.call(a) !== '[object Array]' ||
+		Object.prototype.toString.call(b) !== '[object Array]') {
+		throw new TypeError('All arguments should be an arrays.');
 	}
 	
 	let results = [];
 	
 	for (let i=0; i<a.length; i++) {
-		if (typeof a[i] != 'number' || typeof b[i] != 'number') {
+		if (typeof a[i] !== 'number' || typeof b[i] !== 'number') {
 			throw new TypeError('Type of all elements in given arrays should be a numbers. You have argumnet1[' + i + '] as ' + typeof a[i] + ' and argument2[' + i + '] as ' + typeof b[i] + '.');
 		}
 		
@@ -432,18 +442,18 @@ export function sumArrayElements(a, b) {
 	return results;
 }
 
-/** Calcs products of each elements in arrays and store result to the new array.
+/** Calculates products of each element in arrays and store the result to the new array.
  */
 export function productArrays(a, b) {
-	if (Object.prototype.toString.call(a) != '[object Array]' ||
-		Object.prototype.toString.call(b) != '[object Array]') {
-		throw new Error('All arguments should be an arrays.');
+	if (Object.prototype.toString.call(a) !== '[object Array]' ||
+		Object.prototype.toString.call(b) !== '[object Array]') {
+		throw new TypeError('All arguments should be an arrays.');
 	}
 	
 	let results = [];
 	
 	for (let i=0; i<a.length; i++) {
-		if (typeof a[i] != 'number' || typeof b[i] != 'number') {
+		if (typeof a[i] !== 'number' || typeof b[i] !== 'number') {
 			throw new Error('Type of all elements in given arrays should be a numbers. You have argumnet1[' + i + '] as ' + typeof a[i] + ' and argument2[' + i + '] as ' + typeof b[i] + '.');
 		}
 		
