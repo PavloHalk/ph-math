@@ -36,7 +36,48 @@ class BigDecimal {
     add(n) {
         n = this.#validateAndNormalize(n);
         
+        const sizeInt = Math.max(this.#integer.length, n.#integer.length);
+        const sizeDec = Math.max(this.#decimal.length, n.#decimal.length);
+        
+        const ai = this.#integer.padStart(sizeInt, '0');
+        const bi = n.#integer.padStart(sizeInt, '0');
+        const ad = this.#decimal.padEnd(sizeDec, '0');
+        const bd = n.#decimal.padEnd(sizeDec, '0');
+        let ri = sum(ai, bi);
+        let rd = sum(ad, bd);
+        
+        if (rd.length > sizeDec) {
+            ri = sum(ri, '1'.padStart(ri.length));
+            rd = rd.substring(1);
+        }
+        
+        this.#integer = ri;
+        this.#decimal = rd;
+        this.#precise();
+        
         return this;
+        
+        function sum(a, b) {
+            let result = '';
+            let iterSum = 0;
+            let iterModifier = 0;
+            for (let i = a.length -1; i >= 0; i--) {
+                iterSum = Number(a[i]) + Number(b[i]) + iterModifier;
+
+                if (iterSum >= 10) {
+                    iterSum -= 10;
+                    iterModifier = 1;
+                } else {
+                    iterModifier = 0;
+                }
+
+                result += iterSum.toString();
+            }
+
+            if (iterModifier) result += 1;
+
+            return result.split('').toReversed().join('');
+        }
     }
     
     subtract(n) {
@@ -89,7 +130,8 @@ class BigDecimal {
     [Symbol.toStringTag] = 'BigDecimal';
 }
 
-const a = new BigDecimal('9', '000123456789', 10);
+const a = new BigDecimal('901', '705', 10);
 const b = new BigDecimal('9', '9999', 10);
 a.add(b).add(88).add(17.005).add('8785').add('0.00095');
+//a.add(999.42);
 console.log(a.toString());
