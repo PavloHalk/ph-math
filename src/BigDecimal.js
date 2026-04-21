@@ -1,4 +1,4 @@
-class BigDecimal {
+export default class BigDecimal {
     #integer = '0';
     #decimal = '0';
     #decimalPrecision = 1000;
