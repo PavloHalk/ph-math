@@ -136,12 +136,12 @@ export default class Fraction {
     }
 
     [Symbol.toStringTag] = "Fraction";
-
-    toString() {
-        return this.#numerator + '/' + this.#denominator;
-    }
-
-    valueOf() {
-        return this.#numerator / this.#denominator;
+    
+    [Symbol.toPrimitive](hint) {
+        if (hint === 'default') {
+            return this.#numerator + '/' + this.#denominator;
+        } else {
+            return this.#numerator / this.#denominator;
+        }
     }
 }

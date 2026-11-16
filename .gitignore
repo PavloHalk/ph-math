@@ -3,3 +3,4 @@ dist/
 tests/
 dev/
 .idea/
+src/test.js
